@@ -99,7 +99,7 @@ function handleMessage(sender_psid, received_message) {
 
   if (cmd.localeCompare("") == 0 || cmd.localeCompare("add") == 0 || cmd.localeCompare("Add") == 0) {
     
-    console.log((cmd.localeCompare("") + " " + cmd);
+    console.log(cmd.localeCompare("") + " " + cmd);
  
 
 
