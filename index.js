@@ -100,6 +100,8 @@ function handlePostback(sender_psid, received_postback) {
 
 // Sends response messages via the Send API
 function callSendAPI(sender_psid, response) {
+  let PAGE_ACCESS_TOKEN = "EAAV68YNS1E0BAAZC9ZCi3zXGdFNFhi22wbUz8SaTRznaEWE8n70I8IaGZADdXmhRy0rutJTdAmyyyY91DnjSpZAJrLZCE7v7d7QcJkBGUItZBrZBZALwRw4rMKswrgFNFZC6tpmb1vXC7axZBNj4Of4ZChoaEQ6v3LZBkBj7LZCZCnXzB80nOhyTJRWn7N"
+
     // Construct the message body
   let request_body = {
     "recipient": {
