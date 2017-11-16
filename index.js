@@ -154,10 +154,11 @@ function callSendAPI(sender_psid, response) {
 }
 
 function validateWord(word) {
-  if (/^([^a-zA-Z!@#$%&*?:;"'._-]+)$/.test(word) == true) {
-    console.log("WORD FAILS");     
+  var patt = new RegExp("[^a-zA-Z!@#$%&*?:;'._-]+");
+  if (patt.test(word) == true) {
+    console.log("WORD FAILS: " + word);     
     return false;
   }
-  console.log("WORD WORKS");
+  console.log("WORD WORKS: " + word);
   return true;
 }
