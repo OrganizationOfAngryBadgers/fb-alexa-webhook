@@ -79,40 +79,28 @@ app.get('/webhook', (req, res) => {
 
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
-  let response;
-
-  // Check if the message contains text
-  if (received_message.text && validateWord(received_message.text)) {     
-
-    fs.writeFile('./wordlists/' + sender_psid, received_message.text + ' ', { flag: 'a' }, function(err) {
-        if(err) {
-            return console.log(err);
-        }
-
-        console.log("The file was saved!");
 
 
-  
-      fs.readFile('./wordlists/' + sender_psid, 'utf8', function (err,data) {
-        if (err) {
-          return console.log(err);
-        }
-        console.log(data);
 
 
-        // Create the payload for a basic text message
-        response = {
-          "text": "Your words are: " + data
-        }
+  var str = received_message.text;
+  var cmd;
+  var msg;
+  var n = str.indexOf(" ");
+  if (n > 0) {
+    cmd = str.slice(0, n);
+    msg = str.slice(n + 1, str.length() + 1);
+  } else {
+    cmd = "";
+    msg = str;
+  }
 
-
-        // Sends the response message
-        callSendAPI(sender_psid, response);
-
-
-      });
-    });
-
+  if (cmd.localeCompare("") == 0 || cmd.localeCompare("add") || cmd.localeCompare("Add")) {
+    manageWordList(sender_psid, msg);
+  } else if (cmd.localeCompare("words") || msg.localeCompare("show")) {
+    console.log("SHOW WORDS");
+  } else if (cmd.localeCompare("words") || msg.localeCompare("random"))  {
+    console.log("RANDOM WORDS");
   } else {
     // Create the payload for a basic text message
     response = {
@@ -120,6 +108,7 @@ function handleMessage(sender_psid, received_message) {
     }
     callSendAPI(sender_psid, response);
   }
+
 }
 
 // Handles messaging_postbacks events
@@ -161,4 +150,51 @@ function validateWord(word) {
   }
   console.log("WORD WORKS: " + word);
   return true;
+}
+
+
+function manageWordList(sender_psid, word) {
+let response;
+
+  // Check if the message contains text
+  if (word && validateWord(word)) {
+
+    fs.writeFile('./wordlists/' + sender_psid, word + ' ', { flag: 'a' }, function(err) {
+        if(err) {
+            return console.log(err);
+        }
+
+        console.log("The file was saved!");
+
+
+
+      fs.readFile('./wordlists/' + sender_psid, 'utf8', function (err,data) {
+        if (err) {
+          return console.log(err);
+        }
+        console.log(data);
+
+
+        // Create the payload for a basic text message
+        response = {
+          "text": "Your words are: " + data
+        }
+
+
+        // Sends the response message
+        callSendAPI(sender_psid, response);
+
+
+      });
+    });
+
+  } else {
+    // Create the payload for a basic text message
+    response = {
+      "text": "INVALID COMMAND"
+    }
+    callSendAPI(sender_psid, response);
+  }
+
+
 }
