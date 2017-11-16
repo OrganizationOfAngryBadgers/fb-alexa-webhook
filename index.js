@@ -83,7 +83,7 @@ function handleMessage(sender_psid, received_message) {
 
   // Check if the message contains text
   if (received_message.text) {     
-    updateWordList(sender_sid, received_message.text);
+    updateWordList(sender_psid, received_message.text);
   
     fs.readFile('/wordlists/' + sender_psid, 'utf8', function (err,data) {
       if (err) {
