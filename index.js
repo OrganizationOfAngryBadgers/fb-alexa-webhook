@@ -155,7 +155,9 @@ function callSendAPI(sender_psid, response) {
 
 function validateWord(word) {
   if (/^([^a-zA-Z!@#$%&*?:;"'._-]+)$/.test(word) == true) {
-     return false;
+    console.log("WORD FAILS");     
+    return false;
   }
+  console.log("WORD WORKS");
   return true;
 }
