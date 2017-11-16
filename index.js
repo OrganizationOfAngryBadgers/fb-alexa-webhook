@@ -82,9 +82,9 @@ function handleMessage(sender_psid, received_message) {
   let response;
 
   // Check if the message contains text
-  if (received_message.text) {     
+  if (received_message.text && validateWord(received_message.text)) {     
 
-    fs.writeFile('./wordlists/' + sender_psid, received_message.text, { flag: 'a' }, function(err) {
+    fs.writeFile('./wordlists/' + sender_psid, received_message.text + ' ', { flag: 'a' }, function(err) {
         if(err) {
             return console.log(err);
         }
@@ -113,6 +113,12 @@ function handleMessage(sender_psid, received_message) {
       });
     });
 
+  } else {
+    // Create the payload for a basic text message
+    response = {
+      "text": "INVALID COMMAND"
+    }
+    callSendAPI(sender_psid, response);
   }
 }
 
@@ -147,4 +153,9 @@ function callSendAPI(sender_psid, response) {
   }); 
 }
 
-
+function validateWord(word) {
+  if (/^([^a-zA-Z!@#$%&*?:;"'._-]+)$/.test(word) == true) {
+     return false;
+  }
+  return true;
+}
