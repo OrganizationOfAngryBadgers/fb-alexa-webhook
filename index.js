@@ -104,9 +104,9 @@ function handleMessage(sender_psid, received_message) {
 
 
     manageWordList(sender_psid, msg);
-  } else if (cmd.localeCompare("words") || msg.localeCompare("show")) {
+  } else if (cmd.localeCompare("words") && msg.localeCompare("show")) {
     console.log("SHOW WORDS");
-  } else if (cmd.localeCompare("words") || msg.localeCompare("random"))  {
+  } else if (cmd.localeCompare("words") && msg.localeCompare("random"))  {
     console.log("RANDOM WORDS");
   } else {
     // Create the payload for a basic text message
