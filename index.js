@@ -83,26 +83,36 @@ function handleMessage(sender_psid, received_message) {
 
   // Check if the message contains text
   if (received_message.text) {     
-    updateWordList(sender_psid, received_message.text);
+
+    fs.writeFile('/wordlists/' + sender_psid, received_message.text), { flag: 'a' }, function(err) {
+        if(err) {
+            return console.log(err);
+        }
+
+        console.log("The file was saved!");
+
+
   
-    fs.readFile('/wordlists/' + sender_psid, 'utf8', function (err,data) {
-      if (err) {
-        return console.log(err);
-      }
-      console.log(data);
+      fs.readFile('/wordlists/' + sender_psid, 'utf8', function (err,data) {
+        if (err) {
+          return console.log(err);
+        }
+        console.log(data);
 
 
-      // Create the payload for a basic text message
-      response = {
-        "text": "Your words are: " + data
-      }
+        // Create the payload for a basic text message
+        response = {
+          "text": "Your words are: " + data
+        }
 
 
-      // Sends the response message
-      callSendAPI(sender_psid, response);
+        // Sends the response message
+        callSendAPI(sender_psid, response);
 
 
+      });
     });
+
   }
 }
 
@@ -134,17 +144,6 @@ function callSendAPI(sender_psid, response) {
     } else {
       console.error("Unable to send message:" + err);
     }
-  }); 
-}
-
-
-function updateWordList (sender_psid, word) {
-  fs.writeFile('/wordlists/' + sender_psid, { flag: 'a' }, function(err) {
-      if(err) {
-          return console.log(err);
-      }
-
-      console.log("The file was saved!");
   }); 
 }
 
