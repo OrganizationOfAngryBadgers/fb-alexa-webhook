@@ -139,7 +139,7 @@ function callSendAPI(sender_psid, response) {
 
 
 function updateWordList (sender_psid, word) {
-  fs.writeFile('/wordlists/' + sender_psid, word, function(err) {
+  fs.writeFile('/wordlists/' + sender_psid, { flag: 'w' }, function(err) {
       if(err) {
           return console.log(err);
       }
