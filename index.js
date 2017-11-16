@@ -90,7 +90,7 @@ function handleMessage(sender_psid, received_message) {
   if (n > 0) {
     cmd = str.slice(0, n);
     msg = str.slice(n + 1, str.length + 1);
-    console.log("SPLIT SUCCESS": cmd + "---" + msg);
+    console.log("SPLIT SUCCESS: " + cmd + "---" + msg);
   } else {
     cmd = "";
     msg = str;
