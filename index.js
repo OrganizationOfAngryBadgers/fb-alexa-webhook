@@ -90,12 +90,19 @@ function handleMessage(sender_psid, received_message) {
   if (n > 0) {
     cmd = str.slice(0, n);
     msg = str.slice(n + 1, str.length + 1);
+    console.log("SPLIT SUCCESS": cmd + "---" + msg);
   } else {
     cmd = "";
     msg = str;
+    console.log("SPLIT FAILURE: " + msg);
   }
 
-  if (cmd.localeCompare("") == 0 || cmd.localeCompare("add") || cmd.localeCompare("Add")) {
+  if (cmd.localeCompare("") == 0 || cmd.localeCompare("add") == 0 || cmd.localeCompare("Add") == 0) {
+    
+    console.log((cmd.localeCompare("") + " " + cmd);
+ 
+
+
     manageWordList(sender_psid, msg);
   } else if (cmd.localeCompare("words") || msg.localeCompare("show")) {
     console.log("SHOW WORDS");
