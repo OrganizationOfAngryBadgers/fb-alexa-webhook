@@ -5,6 +5,7 @@ const
   express = require('express'),
   bodyParser = require('body-parser'),
   request = require('request'),
+  fs = require('file-system'),
   app = express().use(bodyParser.json()); // creates express http server
 
 // Sets server port and logs message on success
@@ -83,12 +84,37 @@ function handleMessage(sender_psid, received_message) {
   // Check if the message contains text
   if (received_message.text) {    
 
-    // Create the payload for a basic text message
-    response = {
-      "text": `You sent the message: "${received_message.text}". Now send me an image!`
-    }
+
+  
+
+
+
   }  
   
+  updateWordList(sender_sid, received_message.text);
+  
+  fs.readFile('/wordlists/' + sender_psid, 'utf8', function (err,data) {
+    if (err) {
+      return console.log(err);
+    }
+    console.log(data);
+
+
+    // Create the payload for a basic text message
+    response = {
+      "text": "Your words are: " + data
+    }
+
+
+    // Sends the response message
+    callSendAPI(sender_psid, response);
+
+
+  });
+
+
+
+
   // Sends the response message
   callSendAPI(sender_psid, response);
 }
@@ -123,3 +149,16 @@ function callSendAPI(sender_psid, response) {
     }
   }); 
 }
+
+
+function updateWordList (sender_psid, word) {
+  fs.writeFile('/wordlists/' + psid, word, function(err) {
+      if(err) {
+          return console.log(err);
+      }
+
+      console.log("The file was saved!");
+  }); 
+}
+
+
