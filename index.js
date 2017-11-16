@@ -89,7 +89,7 @@ function handleMessage(sender_psid, received_message) {
   var n = str.indexOf(" ");
   if (n > 0) {
     cmd = str.slice(0, n);
-    msg = str.slice(n + 1, str.length() + 1);
+    msg = str.slice(n + 1, str.length + 1);
   } else {
     cmd = "";
     msg = str;
