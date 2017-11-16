@@ -82,41 +82,28 @@ function handleMessage(sender_psid, received_message) {
   let response;
 
   // Check if the message contains text
-  if (received_message.text) {    
-
-
+  if (received_message.text) {     
+    updateWordList(sender_sid, received_message.text);
   
+    fs.readFile('/wordlists/' + sender_psid, 'utf8', function (err,data) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log(data);
 
 
-
-  }  
-  
-  updateWordList(sender_sid, received_message.text);
-  
-  fs.readFile('/wordlists/' + sender_psid, 'utf8', function (err,data) {
-    if (err) {
-      return console.log(err);
-    }
-    console.log(data);
+      // Create the payload for a basic text message
+      response = {
+        "text": "Your words are: " + data
+      }
 
 
-    // Create the payload for a basic text message
-    response = {
-      "text": "Your words are: " + data
-    }
+      // Sends the response message
+      callSendAPI(sender_psid, response);
 
 
-    // Sends the response message
-    callSendAPI(sender_psid, response);
-
-
-  });
-
-
-
-
-  // Sends the response message
-  callSendAPI(sender_psid, response);
+    });
+  }
 }
 
 // Handles messaging_postbacks events
