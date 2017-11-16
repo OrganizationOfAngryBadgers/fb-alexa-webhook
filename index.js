@@ -84,7 +84,7 @@ function handleMessage(sender_psid, received_message) {
   // Check if the message contains text
   if (received_message.text) {     
 
-    fs.writeFile('/wordlists/' + sender_psid, received_message.text, { flag: 'a' }, function(err) {
+    fs.writeFile('./wordlists/' + sender_psid, received_message.text, { flag: 'a' }, function(err) {
         if(err) {
             return console.log(err);
         }
@@ -93,7 +93,7 @@ function handleMessage(sender_psid, received_message) {
 
 
   
-      fs.readFile('/wordlists/' + sender_psid, 'utf8', function (err,data) {
+      fs.readFile('./wordlists/' + sender_psid, 'utf8', function (err,data) {
         if (err) {
           return console.log(err);
         }
