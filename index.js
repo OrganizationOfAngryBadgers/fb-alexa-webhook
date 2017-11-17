@@ -112,7 +112,7 @@ let response;
   } else if (cmd.localeCompare("events") == 0 && msg.localeCompare("get") == 0)  {
     getEvents();
   } else if (cmd.localeCompare("post") == 0 && msg.length > 1)  {
-    postToFeed();
+    postToFeed(sender_psid, msg);
   } else {
     // Create the payload for a basic text message
     response = {
@@ -209,7 +209,7 @@ function getWordList(sender_psid) {
   });
 }
 
-function postToFeed(msg) {
+function postToFeed(sender_psid, msg) {
   FB.setAccessToken(PAGE_ACCESS_TOKEN);
   FB.api('me/feed', 'post', { message: msg }, function (res) {
     if(!res || res.error) {
