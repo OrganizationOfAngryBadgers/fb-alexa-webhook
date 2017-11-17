@@ -264,7 +264,7 @@ function getEvent(sender_psid, key, val) {
 
     let event = getObjects(eventList, key, val);
 
-    response = {
+    let response = {
       "text": JSON.stringify(event)
     }
     callSendAPI(sender_psid, response);
