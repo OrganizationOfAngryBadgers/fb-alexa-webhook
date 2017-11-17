@@ -241,14 +241,7 @@ function getEvents() {
       callSendAPI(sender_psid, response);
       return;
     }
-    console.log(res.id);
-    console.log(res.name);
-    console.log(res.place.name);
-    console.log(res.description);
-    console.log(res.start_time);
-    console.log(res.end_time);
     
-
     let response = {
       "text": JSON.stringify(res)
     }
