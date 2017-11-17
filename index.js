@@ -10,6 +10,7 @@ const
   app = express().use(bodyParser.json()), // creates express http server
   PAGE_ACCESS_TOKEN = "EAAV68YNS1E0BAAZC9ZCi3zXGdFNFhi22wbUz8SaTRznaEWE8n70I8IaGZADdXmhRy0rutJTdAmyyyY91DnjSpZAJrLZCE7v7d7QcJkBGUItZBrZBZALwRw4rMKswrgFNFZC6tpmb1vXC7axZBNj4Of4ZChoaEQ6v3LZBkBj7LZCZCnXzB80nOhyTJRWn7N";
 
+  let eventList;
 
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
@@ -103,7 +104,7 @@ let response;
     console.log(cmd.localeCompare("") + " " + cmd);
  
 
-
+getEvent('id', 'A');
     manageWordList(sender_psid, msg);
   } else if (cmd.localeCompare("words") == 0 && msg.localeCompare("show") == 0) {
     getWordList(sender_psid);
@@ -111,6 +112,19 @@ let response;
     console.log("RANDOM WORDS");
   } else if (cmd.localeCompare("events") == 0 && msg.localeCompare("get") == 0)  {
     getEvents(sender_psid);
+  } else if (cmd.localeCompare("event") == 0 && msg.length > 5)  {
+    let event = getEvent("id", msg);
+    let response;
+    if (event) {
+      response = {
+        "text": JSON.stringify(event)
+      }
+    } else {
+      response = {
+        "text": "No event found"
+      }
+    }
+    callSendAPI(sender_psid, response);
   } else if (cmd.localeCompare("post") == 0 && msg.length > 1)  {
     postToFeed(sender_psid, msg);
   } else {
@@ -241,10 +255,23 @@ function getEvents(sender_psid) {
       callSendAPI(sender_psid, response);
       return;
     }
-    
+    eventList = res.data;
     let response = {
       "text": JSON.stringify(res)
     }
     callSendAPI(sender_psid, response);
   });
+}
+
+function getEvent(key, value) {
+  var objects = [];
+  for (var i in eventList) {
+      if (!eventList.hasOwnProperty(i)) continue;
+      if (typeof eventList[i] == 'object') {
+          objects = objects.concat(getObjects(eventList[i], key, val));
+      } else if (i == key && eventList[key] == val) {
+          objects.push(eventList);
+      }
+  }
+  return objects;
 }
