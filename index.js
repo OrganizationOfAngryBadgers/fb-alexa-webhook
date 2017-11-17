@@ -268,7 +268,7 @@ function getEvent(key, value) {
   for (var i in eventList) {
       if (!eventList.hasOwnProperty(i)) continue;
       if (typeof eventList[i] == 'object') {
-          objects = objects.concat(getObjects(eventList[i], key, val));
+          objects = objects.concat(getEvent(eventList[i], key, val));
       } else if (i == key && eventList[key] == val) {
           objects.push(eventList);
       }
