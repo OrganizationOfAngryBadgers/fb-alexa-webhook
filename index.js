@@ -7,16 +7,8 @@ const
   request = require('request'),
   fs = require('file-system'),
   FB = require('fb'),
-  app = express().use(bodyParser.json()); // creates express http server
-  
-
-
-  FB.init({
-    appId            : '1542552592503885',
-    autoLogAppEvents : true,
-    xfbml            : true,
-    version          : 'v2.11'
-  });
+  app = express().use(bodyParser.json()), // creates express http server
+  PAGE_ACCESS_TOKEN = "EAAV68YNS1E0BAAZC9ZCi3zXGdFNFhi22wbUz8SaTRznaEWE8n70I8IaGZADdXmhRy0rutJTdAmyyyY91DnjSpZAJrLZCE7v7d7QcJkBGUItZBrZBZALwRw4rMKswrgFNFZC6tpmb1vXC7axZBNj4Of4ZChoaEQ6v3LZBkBj7LZCZCnXzB80nOhyTJRWn7N";
 
 
 // Sets server port and logs message on success
@@ -85,6 +77,41 @@ app.get('/webhook', (req, res) => {
     }
   }
 });
+
+
+
+
+
+FB.setAccessToken(PAGE_ACCESS_TOKEN);
+var message = 'Hi from facebook-node-js';
+FB.api('', 'post', {
+    batch: [
+        { method: 'post', relative_url: 'me/feed', body:'message=' + encodeURIComponent(message) }
+    ]
+}, function (res) {
+    console.log("RUNNIN FB API");
+    var res0;
+ 
+    if(!res || res.error) {
+        console.log(!res ? 'error occurred' : res.error);
+        return;
+    }
+ 
+    res0 = JSON.parse(res[0].body);
+ 
+    if(res0.error) {
+        console.log(res0.error);
+    } else {
+        console.log('Post Id: ' + res0.id);
+    }
+});
+
+
+
+
+
+
+
 
 
 // Handles messages events
