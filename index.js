@@ -109,18 +109,7 @@ let response;
   } else if (cmd.localeCompare("events") == 0 && msg.localeCompare("get") == 0)  {
     getEvents(sender_psid);
   } else if (cmd.localeCompare("event") == 0 && msg.length > 5)  {
-    let event = getEvent("id", msg);
-    let response;
-    if (event) {
-      response = {
-        "text": JSON.stringify(event)
-      }
-    } else {
-      response = {
-        "text": "No event found"
-      }
-    }
-    callSendAPI(sender_psid, response);
+    getEvent(sender_psid, "id", msg);    
   } else if (cmd.localeCompare("post") == 0 && msg.length > 1)  {
     postToFeed(sender_psid, msg);
   } else {
@@ -259,15 +248,37 @@ function getEvents(sender_psid) {
   });
 }
 
-function getEvent(key, val) {
-  var objects = [];
-  for (var i in eventList) {
-      if (!eventList.hasOwnProperty(i)) continue;
-      if (typeof eventList[i] == 'object') {
-          objects = objects.concat(getEvent(eventList[i], key, val));
-      } else if (i == key && eventList[key] == val) {
-          objects.push(eventList);
+function getEvent(sender_psid, key, val) {
+
+  FB.setAccessToken(PAGE_ACCESS_TOKEN);
+  FB.api('me/events', 'get', function (res) {
+    if(!res || res.error) {
+      console.log(!res ? 'error occurred' : res.error);
+      let response = {
+       "text": "Error getting Events"
       }
-  }
-  return objects;
+      callSendAPI(sender_psid, response);
+      return;
+    }
+    eventList = res.data;
+
+    let event = getObjects(eventList, key, val);
+
+    response = {
+      "text": JSON.stringify(event)
+    }
+    callSendAPI(sender_psid, response);
+  });
+}
+function getObjects(obj, key, val) {
+    var objects = [];
+    for (var i in obj) {
+        if (!obj.hasOwnProperty(i)) continue;
+        if (typeof obj[i] == 'object') {
+            objects = objects.concat(getObjects(obj[i], key, val));
+        } else if (i == key && obj[key] == val) {
+            objects.push(obj);
+        }
+    }
+    return objects;
 }
