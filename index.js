@@ -232,7 +232,7 @@ function postToFeed(msg) {
 
 function getEvents() {
   FB.setAccessToken(PAGE_ACCESS_TOKEN);
-  FB.api('me/events.limit=50', {id,name,start_time,end_time,place,description} 'get', function (res) {
+  FB.api('me/events.limit=50', 'get', {id,name,start_time,end_time,place,description}, function (res) {
     if(!res || res.error) {
       console.log(!res ? 'error occurred' : res.error);
       let response = {
