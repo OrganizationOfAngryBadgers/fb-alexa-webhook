@@ -110,7 +110,7 @@ let response;
   } else if (cmd.localeCompare("words") == 0 && msg.localeCompare("random") == 0)  {
     console.log("RANDOM WORDS");
   } else if (cmd.localeCompare("events") == 0 && msg.localeCompare("get") == 0)  {
-    getEvents();
+    getEvents(sender_psid);
   } else if (cmd.localeCompare("post") == 0 && msg.length > 1)  {
     postToFeed(sender_psid, msg);
   } else {
@@ -230,7 +230,7 @@ function postToFeed(sender_psid, msg) {
 }
 
 
-function getEvents() {
+function getEvents(sender_psid) {
   FB.setAccessToken(PAGE_ACCESS_TOKEN);
   FB.api('me/events', 'get', function (res) {
     if(!res || res.error) {
