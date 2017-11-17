@@ -100,11 +100,7 @@ let response;
   }
 
   if (cmd.localeCompare("") == 0 || cmd.localeCompare("add") == 0 || cmd.localeCompare("Add") == 0) {
-    
     console.log(cmd.localeCompare("") + " " + cmd);
- 
-
-getEvent('id', 'A');
     manageWordList(sender_psid, msg);
   } else if (cmd.localeCompare("words") == 0 && msg.localeCompare("show") == 0) {
     getWordList(sender_psid);
@@ -263,7 +259,7 @@ function getEvents(sender_psid) {
   });
 }
 
-function getEvent(key, value) {
+function getEvent(key, val) {
   var objects = [];
   for (var i in eventList) {
       if (!eventList.hasOwnProperty(i)) continue;
