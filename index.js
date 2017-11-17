@@ -106,19 +106,13 @@ let response;
 
     manageWordList(sender_psid, msg);
   } else if (cmd.localeCompare("words") == 0 && msg.localeCompare("show") == 0) {
-    console.log("SHOW WORDS");
+    getWordList(sender_psid);
   } else if (cmd.localeCompare("words") == 0 && msg.localeCompare("random") == 0)  {
     console.log("RANDOM WORDS");
   } else if (cmd.localeCompare("events") == 0 && msg.localeCompare("get") == 0)  {
-    response = {
-      "text": getEvents();
-    }
-    callSendAPI(sender_psid, response);
+    getEvents();
   } else if (cmd.localeCompare("post") == 0 && msg.length > 1)  {
-    response = {
-      "text": postToFeed(msg);
-    }
-    callSendAPI(sender_psid, response);
+    postToFeed();
   } else {
     // Create the payload for a basic text message
     response = {
@@ -172,47 +166,47 @@ function validateWord(word) {
 
 
 function manageWordList(sender_psid, word) {
-let response;
-
   // Check if the message contains text
   if (word && validateWord(word)) {
 
     fs.writeFile('./wordlists/' + sender_psid, word + ' ', { flag: 'a' }, function(err) {
-        if(err) {
-            return console.log(err);
-        }
+      if(err) {
+        return console.log(err);
+      }
 
-        console.log("The file was saved!");
-
-
-
-      fs.readFile('./wordlists/' + sender_psid, 'utf8', function (err,data) {
-        if (err) {
-          return console.log(err);
-        }
-        console.log(data);
-
-
-        // Create the payload for a basic text message
-        response = {
-          "text": "Your words are: " + data
-        }
-
-
-        // Sends the response message
-        callSendAPI(sender_psid, response);
-
-
-      });
+      console.log("The file was saved!");
+      getWordList(sender_psid);
     });
 
   } else {
     // Create the payload for a basic text message
-    response = {
+    let response = {
       "text": "INVALID COMMAND"
     }
     callSendAPI(sender_psid, response);
   }
+}
+
+
+function getWordList(sender_psid) {
+  fs.readFile('./wordlists/' + sender_psid, 'utf8', function (err,data) {
+    if (err) {
+      return console.log(err);
+    }
+    console.log(data);
+
+
+    // Create the payload for a basic text message
+    let response = {
+      "text": "Your words are: " + data
+    }
+
+
+    // Sends the response message
+    callSendAPI(sender_psid, response);
+
+
+  });
 }
 
 function postToFeed(msg) {
@@ -220,19 +214,32 @@ function postToFeed(msg) {
   FB.api('me/feed', 'post', { message: msg }, function (res) {
     if(!res || res.error) {
       console.log(!res ? 'error occurred' : res.error);
+      let response = {
+        "text": "Error Posting to Feed"
+      }
+      callSendAPI(sender_psid, response);
       return;
     }
     console.log('Post Id: ' + res.id);
+
+    let response = {
+      "text": "Post Successful!"
+    }
+    callSendAPI(sender_psid, response);
   });
 }
 
+
 function getEvents() {
   FB.setAccessToken(PAGE_ACCESS_TOKEN);
-  let response "No Events Found";
   FB.api('me/events.limit=50', {id,name,start_time,end_time,place,description} 'get', function (res) {
     if(!res || res.error) {
-     console.log(!res ? 'error occurred' : res.error);
-     return;
+      console.log(!res ? 'error occurred' : res.error);
+      let response = {
+       "text": "Error getting Events"
+      }
+      callSendAPI(sender_psid, response);
+      return;
     }
     console.log(res.id);
     console.log(res.name);
@@ -240,7 +247,11 @@ function getEvents() {
     console.log(res.description);
     console.log(res.start_time);
     console.log(res.end_time);
-    response = JSON.stringify(res);
+    
+
+    let response = {
+      "text": JSON.stringify(res)
+    }
+    callSendAPI(sender_psid, response);
   });
-  return response;
 }
