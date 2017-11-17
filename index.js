@@ -78,42 +78,6 @@ app.get('/webhook', (req, res) => {
   }
 });
 
-
-
-
-
-FB.setAccessToken(PAGE_ACCESS_TOKEN);
-var message = 'Hi from facebook-node-js';
-FB.api('', 'post', {
-    batch: [
-        { method: 'post', relative_url: 'me/feed', body:'message=' + encodeURIComponent(message) }
-    ]
-}, function (res) {
-    console.log("RUNNIN FB API");
-    var res0;
- 
-    if(!res || res.error) {
-        console.log(!res ? 'error occurred' : res.error);
-        return;
-    }
- 
-    res0 = JSON.parse(res[0].body);
- 
-    if(res0.error) {
-        console.log(res0.error);
-    } else {
-        console.log('Post Id: ' + res0.id);
-    }
-});
-
-
-
-
-
-
-
-
-
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
 let response;
@@ -145,6 +109,16 @@ let response;
     console.log("SHOW WORDS");
   } else if (cmd.localeCompare("words") == 0 && msg.localeCompare("random") == 0)  {
     console.log("RANDOM WORDS");
+  } else if (cmd.localeCompare("events") == 0 && msg.localeCompare("get") == 0)  {
+    response = {
+      "text": getEvents();
+    }
+    callSendAPI(sender_psid, response);
+  } else if (cmd.localeCompare("post") == 0 && msg.length > 1)  {
+    response = {
+      "text": postToFeed(msg);
+    }
+    callSendAPI(sender_psid, response);
   } else {
     // Create the payload for a basic text message
     response = {
@@ -239,6 +213,34 @@ let response;
     }
     callSendAPI(sender_psid, response);
   }
+}
 
+function postToFeed(msg) {
+  FB.setAccessToken(PAGE_ACCESS_TOKEN);
+  FB.api('me/feed', 'post', { message: msg }, function (res) {
+    if(!res || res.error) {
+      console.log(!res ? 'error occurred' : res.error);
+      return;
+    }
+    console.log('Post Id: ' + res.id);
+  });
+}
 
+function getEvents() {
+  FB.setAccessToken(PAGE_ACCESS_TOKEN);
+  let response "No Events Found";
+  FB.api('me/events.limit=50', {id,name,start_time,end_time,place,description} 'get', function (res) {
+    if(!res || res.error) {
+     console.log(!res ? 'error occurred' : res.error);
+     return;
+    }
+    console.log(res.id);
+    console.log(res.name);
+    console.log(res.place.name);
+    console.log(res.description);
+    console.log(res.start_time);
+    console.log(res.end_time);
+    response = JSON.stringify(res);
+  });
+  return response;
 }
