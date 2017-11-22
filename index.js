@@ -102,7 +102,7 @@ function initialize() {
         return console.log(err);
       }
       console.log(data);
-    }
+    });
 }
 
 function getEvents() {
