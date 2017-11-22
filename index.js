@@ -8,7 +8,7 @@ const
   fs = require('file-system'),
   FB = require('fb'),
   app = express().use(bodyParser.json()), // creates express http server
-  FB_PAGE_ID = 'me', //BCITSA
+  FB_PAGE_ID = 'BCITSA', //BCITSA
   FB_EVENT_LIST = 'eventlist.json',
   PAGE_ACCESS_TOKEN = "EAAV68YNS1E0BAAZC9ZCi3zXGdFNFhi22wbUz8SaTRznaEWE8n70I8IaGZADdXmhRy0rutJTdAmyyyY91DnjSpZAJrLZCE7v7d7QcJkBGUItZBrZBZALwRw4rMKswrgFNFZC6tpmb1vXC7axZBNj4Of4ZChoaEQ6v3LZBkBj7LZCZCnXzB80nOhyTJRWn7N";
 
@@ -16,7 +16,7 @@ const
 
 // Sets server port and logs message on success//
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
-
+/*
 // Creates the endpoint for our webhook 
 app.post('/webhook', (req, res) => {  
  
@@ -78,21 +78,38 @@ app.get('/webhook', (req, res) => {
     }
   }
 });
-
+*/
 
 app.get('/getEvents', function (req, res) {
   let events = getEvents();
-  res.send(events);
-  console.log(events);
+  res.send(" POTATO " + events);
+  console.log(" POTATO " + events);
 });
 
 initialize();
 
 
 function initialize() {
+  getEvents();
+}
 
+function getEvents() {
+  FB.setAccessToken(PAGE_ACCESS_TOKEN);
+  FB.api(FB_PAGE_ID + '/events?limit=1000', 'get', function (res) {
+    if(!res || res.error) {
+      console.log(!res ? 'error occurred' : res.error);
+      return;
+    }
+    eventList = res.data;
+    let response = JSON.stringify(res);
+    eventsReceived(response);
+  });
+}
 
-    fs.writeFile('./data/' + FB_EVENT_LIST, getEvents(), function(err) {
+//This function runs when the request for events has been received.
+function eventsReceived(events) {
+
+    fs.writeFile('./data/' + FB_EVENT_LIST, events, function(err) {
       if(err) {
         return console.log(err);
       }
@@ -105,20 +122,6 @@ function initialize() {
     });
 }
 
-function getEvents() {
-  FB.setAccessToken(PAGE_ACCESS_TOKEN);
-  FB.api(FB_PAGE_ID + '/events', 'get', function (res) {
-    if(!res || res.error) {
-      console.log(!res ? 'error occurred' : res.error);
-      return res.error;
-    }
-    eventList = res.data;
-    let response = {
-      "text": JSON.stringify(res)
-    }
-    return response;
-  });
-}
 
 function getEvent(sender_psid, key, val) {
 
@@ -154,3 +157,6 @@ function getObjects(obj, key, val) {
     }
     return objects;
 }
+
+
+
