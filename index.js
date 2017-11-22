@@ -9,7 +9,7 @@ const
   FB = require('fb'),
   app = express().use(bodyParser.json()), // creates express http server
   FB_PAGE_ID = 'me', //BCITSA
-  FB_EVENT_LIST = 'eventlist.json'
+  FB_EVENT_LIST = 'eventlist.json',
   PAGE_ACCESS_TOKEN = "EAAV68YNS1E0BAAZC9ZCi3zXGdFNFhi22wbUz8SaTRznaEWE8n70I8IaGZADdXmhRy0rutJTdAmyyyY91DnjSpZAJrLZCE7v7d7QcJkBGUItZBrZBZALwRw4rMKswrgFNFZC6tpmb1vXC7axZBNj4Of4ZChoaEQ6v3LZBkBj7LZCZCnXzB80nOhyTJRWn7N";
 
   let eventList;
