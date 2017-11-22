@@ -110,7 +110,7 @@ function getEvents() {
   FB.api(FB_PAGE_ID + '/events', 'get', function (res) {
     if(!res || res.error) {
       console.log(!res ? 'error occurred' : res.error);
-      return;
+      return res.error;
     }
     eventList = res.data;
     let response = {
