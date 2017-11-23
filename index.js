@@ -87,9 +87,8 @@ app.get('/getEvents', function (req, output) {
       console.log(!res ? 'error occurred' : res.error);
       return;
     }
-    eventList = res.data;
-    delete eventList.paging;
-    let response = JSON.stringify(res);
+    
+    let response = JSON.stringify(res.data);
     updateFile(response);
     output.send(response);
   });
@@ -104,7 +103,7 @@ function initialize() {
 
 function getEvents(id, callback) {
   FB.setAccessToken(PAGE_ACCESS_TOKEN);
-  FB.api(FB_PAGE_ID + '/events?limit=1000', 'get', function (res) {
+  FB.api(FB_PAGE_ID + '/events?limit=10', 'get', function (res) {
     if(!res || res.error) {
       console.log(!res ? 'error occurred' : res.error);
       return;
