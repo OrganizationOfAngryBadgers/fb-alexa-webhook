@@ -88,7 +88,7 @@ app.get('/getEvents', function (req, output) {
       return;
     }
     eventList = res.data;
-    delete eventList["paging"];
+    delete eventList.paging;
     let response = JSON.stringify(res);
     updateFile(response);
     output.send(response);
