@@ -81,9 +81,10 @@ app.get('/webhook', (req, res) => {
 */
 
 app.get('/getEvents', function (req, res) {
-  let events = getEvents();
-  res.send(" POTATO " + events);
-  console.log(" POTATO " + events);
+  getEvents(req.params.id, function(data) {
+    res.send(" POTATO " + events);
+    console.log(" POTATO " + events);
+  });
 });
 
 initialize();
@@ -93,21 +94,23 @@ function initialize() {
   getEvents();
 }
 
-function getEvents() {
+function getEvents(id, callback) {
   FB.setAccessToken(PAGE_ACCESS_TOKEN);
   FB.api(FB_PAGE_ID + '/events?limit=1000', 'get', function (res) {
     if(!res || res.error) {
       console.log(!res ? 'error occurred' : res.error);
+      callback(res.error);
       return;
     }
     eventList = res.data;
     let response = JSON.stringify(res);
-    eventsReceived(response);
+    updateFile(response);
+    callback(res.data);
   });
 }
 
 //This function runs when the request for events has been received.
-function eventsReceived(events) {
+function updateFile(events) {
 
     fs.writeFile('./data/' + FB_EVENT_LIST, events, function(err) {
       if(err) {
@@ -118,7 +121,6 @@ function eventsReceived(events) {
       if (err) {
         return console.log(err);
       }
-      console.log(data);
     });
 }
 
