@@ -80,10 +80,17 @@ app.get('/webhook', (req, res) => {
 });
 */
 
-app.get('/getEvents', function (req, res) {
-  getEvents(req.params.id, function(data) {
-    res.send(" POTATO " + events);
-    console.log(" POTATO " + events);
+app.get('/getEvents', function (req, output) {
+  FB.setAccessToken(PAGE_ACCESS_TOKEN);
+  FB.api(FB_PAGE_ID + '/events?limit=1000', 'get', function (res) {
+    if(!res || res.error) {
+      console.log(!res ? 'error occurred' : res.error);
+      return;
+    }
+    eventList = res.data;
+    let response = JSON.stringify(res);
+    updateFile(response);
+    output.send(response);
   });
 });
 
@@ -99,13 +106,11 @@ function getEvents(id, callback) {
   FB.api(FB_PAGE_ID + '/events?limit=1000', 'get', function (res) {
     if(!res || res.error) {
       console.log(!res ? 'error occurred' : res.error);
-      callback(res.error);
       return;
     }
     eventList = res.data;
     let response = JSON.stringify(res);
     updateFile(response);
-    callback(res.data);
   });
 }
 
