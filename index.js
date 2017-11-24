@@ -89,8 +89,32 @@ app.get('/getEvents', function (req, output) {
     }
     
     let response = JSON.stringify(res.data);
-    updateFile(response);
-    output.send(response);
+
+    response = JSON.parse(response);
+    //let eventJSON = response;
+    let outputJSON = [];
+
+    for(var i=0; i < response.length; i++){
+      var outputEvent = {};
+      outputEvent.description = "" + response[i].description;
+      outputEvent.end_time = "" + response[i].end_time;
+      outputEvent.name = "" + response[i].name;
+      outputEvent.pname = "" + response[i].place.name;
+      outputEvent.city = "" + response[i].place.location.city;
+      outputEvent.country = "" + response[i].place.location.country;
+      outputEvent.latitude = "" + response[i].place.location.latitude;
+      outputEvent.longitude = "" + response[i].place.location.longitude;
+      outputEvent.state = "" + response[i].place.location.state;
+      outputEvent.street = "" + response[i].place.location.street;
+      outputEvent.zip = "" + response[i].place.location.zip;
+      outputEvent.start_time = "" + response[i].start_time;
+      outputEvent.id = "" + response[i].id;
+      outputJSON.push(outputEvent);
+    }
+
+    //updateFile(JSON.stringify(outputJSON));
+    console.log(JSON.stringify(outputJSON));
+    output.send(JSON.stringify(outputJSON));
   });
 });
 
@@ -98,20 +122,7 @@ initialize();
 
 
 function initialize() {
-  getEvents();
-}
-
-function getEvents(id, callback) {
-  FB.setAccessToken(PAGE_ACCESS_TOKEN);
-  FB.api(FB_PAGE_ID + '/events?limit=10', 'get', function (res) {
-    if(!res || res.error) {
-      console.log(!res ? 'error occurred' : res.error);
-      return;
-    }
-    eventList = res.data;
-    let response = JSON.stringify(res);
-    updateFile(response);
-  });
+  //getEvents();
 }
 
 //This function runs when the request for events has been received.
