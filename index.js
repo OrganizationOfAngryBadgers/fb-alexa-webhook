@@ -78,7 +78,7 @@ app.get('/webhook', (req, res) => {
     }
   }
 });
-*/
+*/ 
 
 app.get('/getEvents', function (req, output) {
   console.log("Reading FB");
