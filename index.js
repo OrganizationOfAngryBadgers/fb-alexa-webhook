@@ -81,6 +81,7 @@ app.get('/webhook', (req, res) => {
 */
 
 app.get('/getEvents', function (req, output) {
+  console.log("Reading FB");
   FB.setAccessToken(PAGE_ACCESS_TOKEN);
   FB.api(FB_PAGE_ID + '/events?limit=10', 'get', function (res) {
     if(!res || res.error) {
