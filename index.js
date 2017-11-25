@@ -119,7 +119,7 @@ app.get('/getEvents', function (req, output) {
   });
 });
 
-initialize();
+initialize(); 
 
 
 function initialize() {
